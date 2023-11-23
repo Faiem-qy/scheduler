@@ -46,6 +46,8 @@ export default function Form(props) {
         </form>
         <section className="appointment__validation">{error}</section>
         <InterviewerList
+          // intentionally adding these to test
+          // interviewers="This is a string, not an array"
           interviewers={props.interviewers}
           value={interviewer}
           onChange={setInterviewer}
