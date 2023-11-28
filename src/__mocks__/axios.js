@@ -54,6 +54,8 @@ const fixtures = {
 };
 
 export default {
+  //Since we are mocking the get function, we need to use jest.fn() to create the mock.
+  defaults: { baseURL: "" },
   get: jest.fn(url => {
     if (url === "/api/days") {
       return Promise.resolve({
@@ -76,12 +78,12 @@ export default {
         data: fixtures.interviewers
       });
     }
-    return Promise.resolve({ data: {} });
+    // return Promise.resolve({ data: {} });
   }),
-  put: jest.fn(url => {
-    return Promise.resolve({ status: 204, statusText: "No Content" });
-  }),
-  delete: jest.fn(url => {
-    return Promise.resolve({ status: 204, statusText: "No Content" });
-  })
+  // put: jest.fn(url => {
+  //   return Promise.resolve({ status: 204, statusText: "No Content" });
+  // }),
+  // delete: jest.fn(url => {
+  //   return Promise.resolve({ status: 204, statusText: "No Content" });
+  // })
 };
