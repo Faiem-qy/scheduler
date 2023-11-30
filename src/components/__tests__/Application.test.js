@@ -141,11 +141,40 @@ describe("Application", () => {
     debug()
   });
 
-  // it("shows the delete error when failing to delete an existing appointment", async () => {
-  //   //axios.delete.mockRejectedValueOnce();
-  // });
+  it("shows the delete error when failing to delete an existing appointment", async () => {
+    axios.delete.mockRejectedValueOnce();
+
+    const { container, debug } = render(<Application />);
+    
+    await waitForElement(() => getByText(container, "Archie Cohen"));
+    
+    const appointment = getAllByTestId(container, "appointment").find(
+      appointment => queryByText(appointment, "Archie Cohen")
+    );
+    fireEvent.click(queryByAltText(appointment, "Delete"));
+    
+    expect(getByText(appointment, "Are you sure you would like to delete?")).toBeInTheDocument();
+    
+    fireEvent.click(getByText(appointment, "Confirm"));
+   
+    await waitForElement(() => getByText(appointment, "Error"));
+    expect(getByText(appointment, "Error")).toBeInTheDocument();
+
+    fireEvent.click(queryByAltText(appointment, "Close"));
+
+    expect(getByText(container, "Archie Cohen")).toBeInTheDocument();
+
+    const day = getAllByTestId(container, "day").find(day =>
+        queryByText(day, "Monday")
+      );
+
+    expect(getByText(day, "1 spot remaining")).toBeInTheDocument();
+    
+    debug()
+  });
 
 
 });
 
-//We should use the ByLabelText, ByPlaceholderText, ByText, ByDisplayValue, ByAltText, ByTitle and ByRole queries most of the time. They allow us to make queries based on what the user sees.
+//We should use the ByLabelText, ByPlaceholderText, ByText, ByDisplayValue, ByAltText, ByTitle and ByRole queries most of the time. 
+//They allow us to make queries based on what the user sees.
