@@ -1,6 +1,6 @@
 import React from "react";
 
-import { render, cleanup, act, waitForElement, fireEvent, getByText, prettyDOM, getAllByTestId, getByAltText, getByPlaceholderText } from "@testing-library/react";
+import { render, cleanup, act, waitForElement, fireEvent, getByText, prettyDOM, getAllByTestId, getByAltText, getByPlaceholderText, queryByText } from "@testing-library/react";
 
 import Application from "components/Application";
 
@@ -26,7 +26,7 @@ describe("Application", () => {
 
   it("loads data, books an interview and reduces the spots remaining for the first day by 1", async () => {
     //This container represents the DOM tree that we are working with, and we can pass it to any of the imported queries
-    const { container } = render(<Application />);
+    const { container, debug } = render(<Application />);
     
     await waitForElement(() => getByText(container, "Archie Cohen"));
     
@@ -39,11 +39,16 @@ describe("Application", () => {
     });
     fireEvent.click(getByAltText(appointment, "Sylvia Palmer"));
     
-    await act(async () => {
+    // await act(async () => {
       fireEvent.click(getByText(appointment, "Save"));
-    });
+      expect(getByText(appointment, /saving/i)).toBeInTheDocument();
+    // });
+    await waitForElement(() => getByText(appointment, "Lydia Miller-Jones"));
   
-    // console.log(prettyDOM(appointment));
+    const day = getAllByTestId(container, "day").find(day =>
+      queryByText(day, "Monday")
+    );
+    expect(getByText(day, /no spots remaining/i)).toBeInTheDocument();
   });
 
 });
