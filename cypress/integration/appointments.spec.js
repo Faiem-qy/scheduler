@@ -8,7 +8,8 @@ describe("Appointments", () => {
    });
 
   it("should book an interview", () => { 
-    cy.get(".appointment__add-button")
+    //Clicks on the "Add" button in the second appointment
+    cy.get('[alt="Add"]')
       .first()
       .click()
     // Enters their name
@@ -25,70 +26,40 @@ describe("Appointments", () => {
     cy.contains(".appointment__card--show", "Sylvia Palmer");
   });
 
+  it("should edit an interview", () => { 
+    // Clicks the edit button for the existing appointment
+    cy.get('[alt="Edit"]')
+      .first()
+      .click({ force: true })
+    // Changes the name and interviewer
+    cy.get("[data-testid=student-name-input]")
+      .clear()
+      .type("Grand Poulet")
+      cy.get('[alt="Tori Malcolm"]')
+      .click();
+    // Clicks the save button
+    cy.contains(".button--confirm","Save")
+      .click()
+    // Sees the edited appointment
+    cy.contains(".appointment__card--show", "Grand Poulet")
+    cy.contains(".appointment__card--show", "Tori Malcolm");
+  })
+
+  it("should cancel an interview", () => { 
+    // Clicks the delete button for the existing appointment
+    cy.get('[alt="Delete"]')
+      .first()
+      .click({ force: true })
+    // Clicks the confirm button
+    cy.contains(".button--danger","Confirm")
+      .click()
+    // Sees that the appointment slot is empty
+    cy.contains("Deleting").should("exist");
+    cy.contains("Deleting").should("not.exist");
+
+    cy.contains(".appointment__card--show", "Grand Poulet")
+      .should("not.exist");
+  })
+
+
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// it("should edit an interview", () => {
-//   cy.get("[alt=Edit]")
-//     .first()
-//     .click({ force: true })
-
-//   cy.get("[data-testid=student-name-input]")
-//     .clear()
-//     .type("Billy Bob")
-
-//   cy.get('[alt="Tori Malcolm"]')
-//     .click();
-
-//   cy.contains(".button--confirm","Save")
-//     .click()
-
-//   cy.contains(".appointment__card-left", "Billy Bob")
-
-// })
